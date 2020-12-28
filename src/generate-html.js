@@ -6,8 +6,8 @@ const generateTeam = employeesArr => {
         <div class="flex-row justify-space-between">
 
         ${employeesArr
-          .filter(({ manager }) => manager)
-          .map(({ name, role, id, email, officeNumber }) => {
+          .filter(({ Manager }) => Manager)
+          .map(({ role, name, id, email, officeNumber }) => {
             return `
             <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
                 <div class="card-header">
@@ -35,8 +35,8 @@ const generateTeam = employeesArr => {
           .join('')}
   
           ${employeesArr
-            .filter(({ engineer }) => engineer)
-            .map(({ name, role, id, email, github }) => {
+            .filter(({ Engineer }) => Engineer)
+            .map(({ role, name, id, email, github }) => {
               return `
               <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
                   <div class="card-header">
@@ -66,7 +66,7 @@ const generateTeam = employeesArr => {
             .join('')}
 
             ${employeesArr
-                .filter(({ intern }) => intern)
+                .filter(({ Intern }) => Intern)
                 .map(({ name, role, id, email, school }) => {
                   return `
                   <div class="card text-white bg-primary.bg-gradient mb-3" style="max-width: 18rem;">
@@ -99,11 +99,11 @@ const generateTeam = employeesArr => {
   };
 
 
-module.exports = templateData => {
-    console.log(templateData);
+module.exports = (data) => {
+    // console.log(data);
 
     // destructure projects and about data from templateData based on their property key names
-    const { header, ...employees } = templateData;
+    // const { header, ...employees } = employeeData;
 
 
     return `
@@ -126,11 +126,11 @@ module.exports = templateData => {
     <body>
         <header>
             <div class="container flex-row justify-space-between align-center">
-            <h1 class="page-title text-secondary bg-danger.bg-gradient text-white">${header.name}'s Team</h1>
+            <h1 class="page-title text-secondary bg-danger.bg-gradient text-white">${data.company}'s Team</h1>
             </div>
         </header>
         <main class="container">
-            ${generateTeam(employees)}
+            ${generateTeam(data.employees)}
         </main>
         <footer class="container text-center bg-light text-dark">
             <h3 class="text-dark">&copy; ${new Date().getFullYear()}. Team Member Generator created by Erica Siegel</h3>
