@@ -18,9 +18,9 @@ test("gets employee's name from prompt", () => {
 });
 
 test("gets employee's id from prompt", () => {
-    const employee = new Employee(10);
+    const employee = new Employee('Erica', 10, 'siegel.erica@gmail.com');
 
-    expect(employee.getId()).toEqual(expect.stringContaining(employee.id.toString()));;
+    expect(employee.getId()).toBe(10);
 });
 
 test("Can get email via getEmail()", () => {
