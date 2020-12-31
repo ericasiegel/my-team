@@ -5,27 +5,42 @@ const generateTeam = employeesArr => {
         <h2 class="text-dark bg-primary p-2 display-inline-block">Work</h2>
         <div class="flex-row justify-space-between">
 
-        ${employeesArr
-          .filter(({ Manager }) => Manager)
-          .map(({ role, name, id, email, officeNumber }) => {
+        ${employeesArr.forEach(employee => {
+                let roleSpec = '';
+                let icon = '';
+                switch (employee.getRole()) {
+                    case "Manager":
+                        roleSpec = `Office Number: ${employee.getOfficeNumber()}`;
+                        icon = `mug-hot`;
+                        break;
+                    case "Engineer":
+                        roleSpec = `<a href="${employee.getGithub()}" class="btn btn-outline-primary"><i class="fab fa-github mr-2"></i>View GitHub</a>`;
+                        icon = `glasses`;
+                        break;
+                    case "Intern":
+                        roleSpec = `School: ${employee.getSchool()}`;
+                        icon = `user-graduate`;
+                        break;
+                }
+          
             return `
             <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
                 <div class="card-header">
                     <div>
-                        <h5 class="card-title">${name}</h5>
+                        <h5 class="card-title">${employee.getName()}</h5>
                     </div>
                     <div>
-                        <h5 class="card-title"><i class="fas fa-mug-hot"></i>${role}</h5>
+                        <h5 class="card-title"><i class="fas fa-${icon}"></i>${employee.getRole()}</h5>
                     </div>
                 </div>
                 <div class="card-body card-bg">
                     <div class="card" style="width: 18rem;">
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item">ID: ${id}</li>
+                            <li class="list-group-item">ID: ${employee.getId()}</li>
                             <li class="list-group-item">
-                                Email: <a href="mailto:${email}">${email}</a>
+                                Email: <a href="mailto:${employee.getEmail()}">${employee.getEmail()}</a>
                             </li>
-                            <li class="list-group-item">Office Number: ${officeNumber}</li>
+                            <li class="list-group-item">${roleSpec}</li>
                         </ul>
                     </div>
                 </div>
@@ -34,65 +49,6 @@ const generateTeam = employeesArr => {
           })
           .join('')}
   
-          ${employeesArr
-            .filter(({ Engineer }) => Engineer)
-            .map(({ role, name, id, email, github }) => {
-              return `
-              <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
-                  <div class="card-header">
-                        <div>
-                            <h5 class="card-title">${name}</h5>
-                        </div>
-                        <div>
-                            <h5 class="card-title"><i class="fas fa-glasses"></i>${role}</h5>
-                        </div>
-                  </div>
-                  <div class="card-body card-bg">
-                      <div class="card" style="width: 18rem;">
-                          <ul class="list-group list-group-flush">
-                              <li class="list-group-item">ID: ${id}</li>
-                              <li class="list-group-item">
-                                Email: <a href="mailto:${email}">${email}</a>
-                              </li>
-                              <li class="list-group-item">
-                                <a href="${github}" class="btn btn-outline-primary"><i class="fab fa-github mr-2"></i>View GitHub</a>
-                              </li>
-                          </ul>
-                      </div>
-                  </div>
-              </div>
-            `;
-            })
-            .join('')}
-
-            ${employeesArr
-                .filter(({ Intern }) => Intern)
-                .map(({ name, role, id, email, school }) => {
-                  return `
-                  <div class="card text-white bg-primary.bg-gradient mb-3" style="max-width: 18rem;">
-                      <div class="card-header">
-                        <div>
-                            <h5 class="card-title">${name}</h5>
-                        </div>
-                        <div>
-                            <h5 class="card-title"><i class="fas fa-user-graduate"></i>${role}</h5>
-                        </div>
-                      </div>
-                      <div class="card-body bg-light">
-                          <div class="card" style="width: 18rem;">
-                              <ul class="list-group list-group-flush">
-                                  <li class="list-group-item">ID: ${id}</li>
-                                  <li class="list-group-item">
-                                    Email: <a href="mailto:${email}">${email}</a>
-                                  </li>
-                                  <li class="list-group-item">School: ${school}</li>
-                              </ul>
-                          </div>
-                      </div>
-                  </div>
-                `;
-                })
-                .join('')}
         </div>
       </section>
     `;
@@ -101,9 +57,6 @@ const generateTeam = employeesArr => {
 
 module.exports = (data) => {
     // console.log(data);
-
-    // destructure projects and about data from templateData based on their property key names
-    // const { header, ...employees } = employeeData;
 
 
     return `
@@ -126,7 +79,7 @@ module.exports = (data) => {
     <body>
         <header>
             <div class="container flex-row justify-space-between align-center">
-            <h1 class="page-title text-secondary bg-danger.bg-gradient text-white">${data.company}'s Team</h1>
+            <h1 class="page-title text-secondary bg-danger.bg-gradient text-white">My Team</h1>
             </div>
         </header>
         <main class="container">
