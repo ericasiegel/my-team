@@ -1,10 +1,11 @@
 const fs = require('fs');
 const inquirer = require('inquirer');
 
-// Employee constructor functions
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 const Manager = require("./lib/Manager");
+
+const generatePage = require('./src/generate-html.js');
 
 
 class InitilizeApp {
@@ -109,6 +110,12 @@ class InitilizeApp {
 
     // function to check if the user would like to input another employee or finish the app
     endQuestions() {
+        console.log(`
+                    ________________________________________________
+
+                        Do You Have Any More Employees To Enter?
+                    ________________________________________________
+                `)
         inquirer.prompt(
             { // ask the user if they would like to add an employee or finish to write the app
                 type: 'list',
@@ -124,6 +131,12 @@ class InitilizeApp {
             
             // if 'Add another employee' is chosen go back to startQuestions() to input another employee
             } else {
+                console.log(`
+                    ___________________________
+
+                        Add Another Employee
+                    ___________________________
+                `)
                 this.startQuestions();
             }
         })
@@ -131,11 +144,81 @@ class InitilizeApp {
 
     // function to write the html after the user selects 'Finish'
     writeProgram() {
-        console.log(this.teamData);
+        // console.log(this.teamData);
+        fs.readFile('./src/page-template.html', 'utf8', (err, htmlCard) => {
+            htmlCard = htmlCard.split("<div><div>").join(this.generateEmployeeCards())
+
+            fs.writeFile('./dist/index.html', htmlCard, err => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                console.log(`
+                ___________________________________________________________________________________
+    
+                  Team Directory Created! Check Out index.html In The "dist" Directory To See It!
+                ___________________________________________________________________________________
+                `);
+              
+            });
+        })
+
+        
+        // const pageHTML = generatePage(htmlCard);
+
+        
+    }
+
+    generateEmployeeCards() {
+
+        this.cards = ``;
+
+        this.teamData.forEach(employee => {
+            // console.log(employee);
+                let roleSpec = '';
+                let icon = '';
+                switch (employee.getRole()) {
+                    case "Manager":
+                        roleSpec = `Office Number: ${employee.getOfficeNumber()}`;
+                        icon = `mug-hot`;
+                        break;
+                    case "Engineer":
+                        roleSpec = `<a href="https://github.com/${employee.getGithub()}" target="new" class="btn btn-outline-primary"><i class="fab fa-github mr-2"></i> View GitHub</a>`;
+                        icon = `glasses`;
+                        break;
+                    case "Intern":
+                        roleSpec = `School: ${employee.getSchool()}`;
+                        icon = `user-graduate`;
+                        break;
+                }
+            this.card = `
+        <div class="col">
+            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                <div class="card-header">
+                    <div>
+                        <h4 class="card-title">${employee.getName()}</h4>
+                    </div>
+                    <div>
+                        <h5 class="card-title"><i class="fas fa-${icon}"></i> ${employee.getRole()}</h5>
+                    </div>
+                </div>
+                <div class="card-body card-bg text-dark">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item bg-light">ID: ${employee.getId()}</li>
+                        <li class="list-group-item bg-light">
+                            Email: <a href="mailto:${employee.getEmail()}">${employee.getEmail()}</a>
+                        </li>
+                        <li class="list-group-item bg-light">${roleSpec}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+          `;
+          this.cards += this.card;
+        });
+        return this.cards;
     }
 }
-
-
 
 
 module.exports = InitilizeApp;

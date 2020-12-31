@@ -1,0 +1,17 @@
+header {
+    height: 100px;
+
+}
+.header {
+    padding: 20px;
+}
+.main {
+    padding: 20px;
+}
+
+footer {
+    height: 100px;
+}
+.footer {
+    padding: 35px;
+}
