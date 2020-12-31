@@ -146,8 +146,11 @@ class InitilizeApp {
     writeProgram() {
         // console.log(this.teamData);
         fs.readFile('./src/page-template.html', 'utf8', (err, htmlCard) => {
+
+            // replaces <div></div> with html from generateEmployeeCards
             htmlCard = htmlCard.split("<div><div>").join(this.generateEmployeeCards())
 
+            // write the html file with the data from generateEmployeeCards
             fs.writeFile('./dist/index.html', htmlCard, err => {
                 if (err) {
                     console.log(err);
@@ -164,56 +167,65 @@ class InitilizeApp {
         })
 
         
-        // const pageHTML = generatePage(htmlCard);
-
-        
     }
-
+    // function to generate a card for each employee
     generateEmployeeCards() {
 
+        // empty card variable
         this.cards = ``;
 
+        // loop through each employee and place their info into the html based off their role
         this.teamData.forEach(employee => {
             // console.log(employee);
+                // empty variables for specific card information
                 let roleSpec = '';
                 let icon = '';
+                let style = '';
                 switch (employee.getRole()) {
+                    // if they are a Manager, place role specific styles, icons, and data in proper places
                     case "Manager":
                         roleSpec = `Office Number: ${employee.getOfficeNumber()}`;
                         icon = `mug-hot`;
+                        style = `border-primary manager`;
                         break;
+                    // if they are a Engineer, place role specific styles, icons, and data in proper places
                     case "Engineer":
                         roleSpec = `<a href="https://github.com/${employee.getGithub()}" target="new" class="btn btn-outline-primary"><i class="fab fa-github mr-2"></i> View GitHub</a>`;
                         icon = `glasses`;
+                        style = `border-warning engineer`;
                         break;
+                    // if they are a Intern, place role specific styles, icons, and data in proper places
                     case "Intern":
                         roleSpec = `School: ${employee.getSchool()}`;
                         icon = `user-graduate`;
+                        style = `border-success intern`;
                         break;
                 }
+            // html to generate for each employee card
             this.card = `
-        <div class="col">
-            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
-                <div class="card-header">
-                    <div>
-                        <h4 class="card-title">${employee.getName()}</h4>
+            <div class="col">
+                <div class="card h-100 mb-3 ${style}" style="max-width: 18rem;">
+                    <div class="card-header">
+                        <div>
+                            <h4 class="card-title">${employee.getName()}</h4>
+                        </div>
+                        <div>
+                            <h5 class="card-title"><i class="fas fa-${icon}"></i> ${employee.getRole()}</h5>
+                        </div>
                     </div>
-                    <div>
-                        <h5 class="card-title"><i class="fas fa-${icon}"></i> ${employee.getRole()}</h5>
+                    <div class="card-body bg-white card-bg text-dark">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item bg-light">ID: ${employee.getId()}</li>
+                            <li class="list-group-item bg-light">
+                                Email: <a href="mailto:${employee.getEmail()}">${employee.getEmail()}</a>
+                            </li>
+                            <li class="list-group-item bg-light">${roleSpec}</li>
+                        </ul>
                     </div>
-                </div>
-                <div class="card-body card-bg text-dark">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item bg-light">ID: ${employee.getId()}</li>
-                        <li class="list-group-item bg-light">
-                            Email: <a href="mailto:${employee.getEmail()}">${employee.getEmail()}</a>
-                        </li>
-                        <li class="list-group-item bg-light">${roleSpec}</li>
-                    </ul>
                 </div>
             </div>
-        </div>
           `;
+          //add card to cards variable
           this.cards += this.card;
         });
         return this.cards;
