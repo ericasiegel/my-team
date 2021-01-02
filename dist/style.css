@@ -1,10 +1,11 @@
 header {
-    height: 100px;
+    height: 150px;
     background-color: blueviolet;
 
 }
 .header {
-    padding: 20px;
+    vertical-align: middle;
+    padding: 50px;
 }
 .manager {
     color: rgb(0, 0, 0);

@@ -86,24 +86,19 @@ class InitilizeApp {
     startQuestions() {
         inquirer.prompt(this.employeeQuestions).then(data => {
             // console.log(data);
-            
-            // cycle through the questions and push data to array based off of the role chosen
-            switch(data.role) {
-                case 'Manager':
-                    this.teamData.push(new Manager(data.name, data.id, data.email, data.officeNumber));
-                    // once data is pushed to the array, check to see if the employee would like to enter another employee
-                    this.endQuestions();
-                    break;
-                case 'Engineer':
-                    this.teamData.push(new Engineer(data.name, data.id, data.email, data.github));
-                    // once data is pushed to the array, check to see if the employee would like to enter another employee
-                    this.endQuestions();
-                    break;
-                case 'Intern':
-                    this.teamData.push(new Intern(data.name, data.id, data.email, data.school));
-                    // once data is pushed to the array, check to see if the employee would like to enter another employee
-                    this.endQuestions();
-                    break;
+            // push data to array based off of the role chosen
+            if (data.role === 'Manager') {
+                this.teamData.push(new Manager(data.name, data.id, data.email, data.officeNumber));
+                // once data is pushed to the array, check to see if the employee would like to enter another employee
+                return this.endQuestions();
+            } else if (data.role === 'Engineer') {
+                this.teamData.push(new Engineer(data.name, data.id, data.email, data.github));
+                // once data is pushed to the array, check to see if the employee would like to enter another employee
+                return this.endQuestions();
+            } else if (data.role === 'Intern') {
+                this.teamData.push(new Intern(data.name, data.id, data.email, data.school));
+                // once data is pushed to the array, check to see if the employee would like to enter another employee
+                return this.endQuestions();
             }
         })
     }
@@ -121,7 +116,7 @@ class InitilizeApp {
                 type: 'list',
                 name: 'action',
                 message: 'What would you like to do?',
-                choices: ['Add Another Employee', 'Finish']
+                choices: ['Add Employee', 'Finish']
             }
         )
         .then(({ action }) => {
@@ -145,13 +140,24 @@ class InitilizeApp {
     // function to write the html after the user selects 'Finish'
     writeProgram() {
         // console.log(this.teamData);
-        fs.readFile('./src/page-template.html', 'utf8', (err, htmlCard) => {
+
+        const initHtml = generatePage();
+        // write initial index.html with out cards
+        fs.writeFile('./dist/index.html', initHtml, err => {
+            if (err) {
+                console.log(err);
+            }
+        });
+
+        // read new index.html to replace <div></div> with generated cards.
+        fs.readFile('./dist/index.html', 'utf8', (err, htmlCard) => {
 
             // replaces <div></div> with html from generateEmployeeCards
             htmlCard = htmlCard.split("<div><div>").join(this.generateEmployeeCards())
 
             // write the html file with the data from generateEmployeeCards
             fs.writeFile('./dist/index.html', htmlCard, err => {
+                
                 if (err) {
                     console.log(err);
                     return;
@@ -181,24 +187,28 @@ class InitilizeApp {
                 let roleSpec = '';
                 let icon = '';
                 let style = '';
+                let border = '';
                 switch (employee.getRole()) {
                     // if they are a Manager, place role specific styles, icons, and data in proper places
                     case "Manager":
                         roleSpec = `Office Number: ${employee.getOfficeNumber()}`;
-                        icon = `mug-hot`;
+                        icon = `briefcase`;
                         style = `border-primary manager`;
+                        border = `border-primary`;
                         break;
                     // if they are a Engineer, place role specific styles, icons, and data in proper places
                     case "Engineer":
                         roleSpec = `<a href="https://github.com/${employee.getGithub()}" target="new" class="btn btn-outline-primary"><i class="fab fa-github mr-2"></i> View GitHub</a>`;
-                        icon = `glasses`;
+                        icon = `tools`;
                         style = `border-warning engineer`;
+                        border = `border-warning`;
                         break;
                     // if they are a Intern, place role specific styles, icons, and data in proper places
                     case "Intern":
                         roleSpec = `School: ${employee.getSchool()}`;
                         icon = `user-graduate`;
                         style = `border-success intern`;
+                        border = `border-success`;
                         break;
                 }
             // html to generate for each employee card
@@ -214,13 +224,15 @@ class InitilizeApp {
                         </div>
                     </div>
                     <div class="card-body bg-white card-bg text-dark">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item bg-light">ID: ${employee.getId()}</li>
-                            <li class="list-group-item bg-light">
-                                Email: <a href="mailto:${employee.getEmail()}">${employee.getEmail()}</a>
-                            </li>
-                            <li class="list-group-item bg-light">${roleSpec}</li>
-                        </ul>
+                        <div class="card ${border}">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item bg-light">ID: ${employee.getId()}</li>
+                                <li class="list-group-item bg-light">
+                                    Email: <a href="mailto:${employee.getEmail()}">${employee.getEmail()}</a>
+                                </li>
+                                <li class="list-group-item bg-light">${roleSpec}</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
