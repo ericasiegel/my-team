@@ -41,8 +41,11 @@ JavaScript, ES6, Node.js, npm Inquirer Package, Jest
 - Navigate to the "dist" folder and you will see a new index.html and it's styles.css file.
 - Copy and paste those files into your app's drectory.
 
+### Generated HTML
+![Generated index.html](./assets/images/pic5.png)
+
 ### Successful Tests
-![successful tests](./assets/images/pic5.png)
+![successful tests](./assets/images/pic6.png)
 
 ### Command Line Prompt in Terminal
 ![Command Line](./assets/images/pic1.png)
@@ -50,14 +53,13 @@ JavaScript, ES6, Node.js, npm Inquirer Package, Jest
 ### Prompted Questions in Terminal
 ![Prompted Questions](./assets/images/pic2.png)
 
-### Required Question Error
-![Required Question Error](./assets/images/pic6.png)
+### Add Employee?
+![Add Employee](./assets/images/pic3.png)
 
-### Successfuly Answered Questions
-![Question Success](./assets/images/pic3.png)
+### Successfully Generated HTML Message
+![Success Message](./assets/images/pic4.png)
 
-### Generated Readme Markdown
-![Generated index.html](./assets/images/pic4.png)
+
 
 
 
