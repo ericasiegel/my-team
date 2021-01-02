@@ -25,7 +25,7 @@ JavaScript, ES6, Node.js, npm Inquirer Package, Jest
 
 [Generated HTML Demo](./dist/index.html)
 
-[Team Member Generator Video Walkthrough](link)
+[Team Member Generator Video Walkthrough](https://drive.google.com/file/d/1rkU_pqfFhXwWKPX01cxl7Gt9T1Q9hZSQ/view)
 
 ## Installation
 
